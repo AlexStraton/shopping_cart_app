@@ -2,7 +2,7 @@
   "name": "shopping_cart",
   "version": "1.0.0",
   "description": "shopping_cart",
-  "main": "listen.ts",
+  "main": "listen.js",
   "type": "module",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
@@ -15,9 +15,14 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "pg": "^8.12.0",
-    "pg-format": "^1.0.4"
+    "pg-format": "^1.0.4",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
-    "@types/node": "^22.2.0"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.2.0",
+    "@types/pg": "^8.11.6",
+    "@types/pg-format": "^1.0.5"
   }
 }
