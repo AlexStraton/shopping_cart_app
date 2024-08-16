@@ -1,8 +1,8 @@
 import fetchAllProducts from "../models/products.models.js";
-const getAllProducts = async (err) => {
+const getAllProducts = async (req, res, next) => {
     try {
         const allProducts = await fetchAllProducts();
-        console.log(allProducts);
+        res.status(200).send({ products: allProducts.rows });
     }
     catch {
         return err;
