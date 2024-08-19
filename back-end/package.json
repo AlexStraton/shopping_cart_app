@@ -7,8 +7,8 @@
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
-    "start": "ts-node listen.js",
-    "seed-prod": "NODE_ENV=production npm run seed",
+    "start": "nodemon ts-node listen.js",
+    "seed-prod": "NODE_ENV=production npm run seed"
   },
   "dependencies": {
     "@types/supertest": "^6.0.2",
