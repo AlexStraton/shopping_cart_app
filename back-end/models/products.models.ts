@@ -4,20 +4,31 @@ const fetchAllProducts = async () => {
   return db.query(`SELECT * FROM products;`);
 };
 
-const postProduct = async (body) => {
-const {product_name, price, description, product_image_url} = body
+const postProduct = async (body: {
+  product_name: string;
+  price: number;
+  description: string;
+  product_image_url: string;
+}) => {
+  const { product_name, price, description, product_image_url } = body;
 
-let queryString = `INSERT INTO products (product_name, price, description`
+  let queryString = `INSERT INTO products (product_name, price, description`;
 
-if(product_image_url) {queryString += `, product_image_url`}
-queryString += `) VALUES ($1, $2, $3`
-if(product_image_url) {queryString += `, $4`}
-queryString += `) RETURNING *`
+  if (product_image_url) {
+    queryString += `, product_image_url`;
+  }
+  queryString += `) VALUES ($1, $2, $3`;
+  if (product_image_url) {
+    queryString += `, $4`;
+  }
+  queryString += `) RETURNING *`;
 
-const params = [product_name, price, description]
-if(product_image_url) {params.push(product_image_url)}
+  const params = [product_name, price, description];
+  if (product_image_url) {
+    params.push(product_image_url);
+  }
 
-return db.query(queryString, params)
-}
+  return db.query(queryString, params);
+};
 
-export {fetchAllProducts, postProduct};
+export { fetchAllProducts, postProduct };
