@@ -1,4 +1,5 @@
-import { fetchAllProducts, postProduct } from "../models/products.models.js";
+import { fetchAllProducts, postProduct, removeProduct } from "../models/products.models.js";
+import checkExists from "../utils/checkExists.js";
 const getAllProducts = async (req, res, next) => {
     try {
         const allProducts = await fetchAllProducts();
@@ -12,16 +13,21 @@ const postNewProduct = async (req, res, next) => {
     const body = req.body;
     try {
         const addProduct = await postProduct(body);
-        // if (addProduct.rows[0].product_image_url === null) {
-        //   addProduct.rows[0].product_image_url =
-        //     "https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png";
-        //     console.log("Reaching inside If block")
-        // }
         res.status(201).send({ product: addProduct.rows[0] });
     }
     catch (err) {
-        console.log(err);
         next(err);
     }
 };
-export { getAllProducts, postNewProduct };
+const deleteProduct = async (req, res, next) => {
+    const productId = req.params.productId;
+    try {
+        await checkExists("products", "product_id", productId);
+        removeProduct(productId);
+        res.status(204).send();
+    }
+    catch (err) {
+        next(err);
+    }
+};
+export { getAllProducts, postNewProduct, deleteProduct };

@@ -1,5 +1,6 @@
-import { fetchAllProducts, postProduct } from "../models/products.models.js";
+import { fetchAllProducts, postProduct, removeProduct } from "../models/products.models.js";
 import { Request, Response, NextFunction } from "express";
+import checkExists from "../utils/checkExists.js";
 
 const getAllProducts = async (
   req: Request,
@@ -24,9 +25,23 @@ const postNewProduct = async (
     const addProduct = await postProduct(body);
     res.status(201).send({ product: addProduct.rows[0] });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
 
-export { getAllProducts, postNewProduct };
+const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) =>{
+  const productId: string = req.params.productId
+  try {
+    await checkExists("products", "product_id", productId)
+    removeProduct(productId)
+    res.status(204).send();
+  } catch (err) {
+    next(err)
+  }
+}
+
+export { getAllProducts, postNewProduct, deleteProduct };

@@ -31,4 +31,8 @@ const postProduct = async (body: {
   return db.query(queryString, params);
 };
 
-export { fetchAllProducts, postProduct };
+const removeProduct = async (productId: string) => {
+  return db.query('DELETE FROM products WHERE product_id = $1', [productId])
+}
+
+export { fetchAllProducts, postProduct, removeProduct };
