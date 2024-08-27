@@ -6,7 +6,13 @@ import {
   deleteProduct,
 } from "./controller/products.controller.js";
 import { getAllUsers } from "./controller/users.controller.js";
-import { getAllProductsInCart, postProductToCart, deleteProductInCart, patchProductInCart } from "./controller/productsInCart.controller.js";
+import {
+  getAllProductsInCart,
+  postProductToCart,
+  deleteProductInCart,
+  patchProductInCart,
+  deleteAllProductsInCart,
+} from "./controller/productsInCart.controller.js";
 
 interface CustomError {
   status?: number;
@@ -24,12 +30,13 @@ app.get("/api/users", getAllUsers);
 app.get("/api/productsInCart/:userId", getAllProductsInCart);
 
 app.post("/api/products", postNewProduct);
-app.post("/api/productsInCart", postProductToCart)
+app.post("/api/productsInCart", postProductToCart);
 
 app.delete("/api/products/:productId", deleteProduct);
-app.delete("/api/productsInCart", deleteProductInCart)
+app.delete("/api/productsInCart/:cartId", deleteProductInCart);
+app.delete("/api/productsInCart/user/:userId", deleteAllProductsInCart);
 
-app.patch("/api/productsInCart/:cartId", patchProductInCart)
+app.patch("/api/productsInCart/:cartId", patchProductInCart);
 //OPTIONAL: PATCH product
 
 app.all("*", (req: Request, res: Response) => {
@@ -38,7 +45,7 @@ app.all("*", (req: Request, res: Response) => {
 });
 
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
-  console.log(err)
+  console.log(err);
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else if (err.code) {

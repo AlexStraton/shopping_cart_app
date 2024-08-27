@@ -3,7 +3,8 @@ import {
   fetchAllProductsInCart,
   addProductToCart,
   removeProductFromCart,
-  updateProductInCart
+  updateProductInCart,
+  removeAllProductsInCart,
 } from "../models/productsInCart.models.js";
 import checkExists from "../utils/checkExists.js";
 
@@ -45,16 +46,14 @@ const postProductToCart: ControllerFunction = async (req, res, next) => {
 };
 
 const deleteProductInCart: ControllerFunction = async (req, res, next) => {
-  interface body {
-    cart_line_id: string;
-  }
-  const body: body = req.body;
-  if (!body) {
+  const cart_line_id: string = req.params.cartId;
+  if (!cart_line_id) {
     throw { status: 400, msg: "Bad Request" };
   }
-  await checkExists("productsincart", "cart_line_id", body.cart_line_id);
+
+  await checkExists("productsincart", "cart_line_id", cart_line_id);
   try {
-    await removeProductFromCart(body.cart_line_id);
+    await removeProductFromCart(cart_line_id);
     res.status(204).send();
   } catch (err) {
     next(err);
@@ -73,9 +72,23 @@ const patchProductInCart: ControllerFunction = async (req, res, next) => {
   }
 };
 
+const deleteAllProductsInCart: ControllerFunction = async (req, res, next) => {
+  const userId: string = req.params.userId;
+
+  await checkExists("users", "user_id", userId);
+
+  try {
+    await removeAllProductsInCart(userId);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   getAllProductsInCart,
   postProductToCart,
   deleteProductInCart,
   patchProductInCart,
+  deleteAllProductsInCart,
 };

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { getAllProducts, postNewProduct, deleteProduct, } from "./controller/products.controller.js";
 import { getAllUsers } from "./controller/users.controller.js";
-import { getAllProductsInCart, postProductToCart, deleteProductInCart, patchProductInCart } from "./controller/productsInCart.controller.js";
+import { getAllProductsInCart, postProductToCart, deleteProductInCart, patchProductInCart, deleteAllProductsInCart, } from "./controller/productsInCart.controller.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -12,7 +12,8 @@ app.get("/api/productsInCart/:userId", getAllProductsInCart);
 app.post("/api/products", postNewProduct);
 app.post("/api/productsInCart", postProductToCart);
 app.delete("/api/products/:productId", deleteProduct);
-app.delete("/api/productsInCart", deleteProductInCart);
+app.delete("/api/productsInCart/:cartId", deleteProductInCart);
+app.delete("/api/productsInCart/user/:userId", deleteAllProductsInCart);
 app.patch("/api/productsInCart/:cartId", patchProductInCart);
 //OPTIONAL: PATCH product
 app.all("*", (req, res) => {
