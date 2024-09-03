@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { getAllProducts } from "./api";
-import { blue } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import { Colors } from "@/constants/Colors";
 
 export function ProductCards() {
   const [products, setProducts] = useState([]);
@@ -16,7 +16,7 @@ export function ProductCards() {
   const allProducts: Products[] = [
     {
       product_id: 1,
-      product_name: "soap",
+      product_name: "Soap",
       price: 99,
       product_image_url:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS61eNgxUDg-3wgANvffiHQZHTVq3L1l80trQ&s",
@@ -24,7 +24,7 @@ export function ProductCards() {
     },
     {
       product_id: 2,
-      product_name: "shampoo",
+      product_name: "Shampoo",
       price: 150,
       product_image_url:
         "https://m.media-amazon.com/images/I/515Xr78ub7L.__AC_SX300_SY300_QL70_ML2_.jpg",
@@ -32,7 +32,7 @@ export function ProductCards() {
     },
     {
       product_id: 3,
-      product_name: "toothpaste",
+      product_name: "Toothpaste",
       price: 85,
       product_image_url:
         "https://m.media-amazon.com/images/I/71U5HKeQ49L.__AC_SY300_SX300_QL70_ML2_.jpg",
@@ -50,13 +50,15 @@ export function ProductCards() {
       {products.map((product) => {
         return (
           <View key={product.product_id} style={styles.cardContainer}>
-            <Text>{product.product_name}</Text>
-            <Text>{product.description}</Text>
-            <Text>{product.price}</Text>
             <Image
               style={styles.image}
               source={{ uri: product.product_image_url }}
             />
+            <View style={styles.productDetails}>
+              <Text style={styles.productName}>{product.product_name}</Text>
+              <Text style={styles.description}>{product.description}</Text>
+              <View style={styles.priceContainer}><Text style={styles.price}>{product.price}</Text></View>
+            </View>
           </View>
         );
       })}
@@ -65,10 +67,35 @@ export function ProductCards() {
 }
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "blue",
+    backgroundColor: Colors.primary500,
+    padding: 12,
+    margin: 12,
+    borderRadius: 8,
+    flexDirection: "row",
+  },
+  productDetails: {
+    margin: 12,
+    padding: 10,
+    backgroundColor: "white"
   },
   image: {
     width: 150,
     height: 150,
   },
+  productName: {
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  description: {
+    marginTop: 8,
+    fontSize: 12,
+  },
+  price: {
+    padding: 10,
+    textAlign: "right"
+  },
+  priceContainer: {
+    alignItems: "flex-start",
+
+  }
 });
