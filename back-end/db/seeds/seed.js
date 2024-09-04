@@ -5,7 +5,7 @@ const seed = async ({ products, productsInCart, users }) => {
     await db.query("DROP TABLE IF EXISTS products;");
     await db.query("DROP TABLE IF EXISTS users;");
     await db.query("CREATE TABLE users(user_id SERIAL PRIMARY KEY, username VARCHAR(50) NOT NULL, avatar VARCHAR(100) DEFAULT 'https://www.rcemlearning.org/wp-content/uploads/blank-user-icon-image.jpg');");
-    await db.query("CREATE TABLE products(product_id SERIAL PRIMARY KEY, product_name VARCHAR(100) NOT NULL, price INT NOT NULL, description VARCHAR(200), product_image_url VARCHAR(200) DEFAULT 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png');");
+    await db.query("CREATE TABLE products(product_id SERIAL PRIMARY KEY, product_name VARCHAR(100) NOT NULL, price INT NOT NULL, description VARCHAR(200), product_image_url VARCHAR(200) DEFAULT 'https://lh3.googleusercontent.com/proxy/YC_hzp-B79T6qkjCLsiecs2_LjDcwLsVrTPIn9SrPhHur1S41WUPeu9uFhtQptVRb5iSKTWS5gLF6oWsXzw6w7r7cfKDvawMMYr5W4X_Fw');");
     await db.query("CREATE TABLE productsInCart(cart_line_id SERIAL PRIMARY KEY, user_id INT REFERENCES users(user_id), product_id INT REFERENCES products(product_id), quantity INT);");
     const insertUsersString = format("INSERT INTO users (username) VALUES %L;", users.map(({ username }) => [username]));
     await db.query(insertUsersString);

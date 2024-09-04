@@ -54,7 +54,6 @@ const patchProductInCart = async (req, res, next) => {
 };
 const deleteAllProductsInCart = async (req, res, next) => {
     const userId = req.params.userId;
-    console.log(userId);
     await checkExists("users", "user_id", userId);
     try {
         await removeAllProductsInCart(userId);
