@@ -5,11 +5,11 @@ import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { postProductToCart } from "./api";
 import { User } from "./context/User";
+import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 
 export function ProductCards() {
   const [products, setProducts] = useState([]);
-  const {user} = useContext(User)
-
+  const { user } = useContext(User);
 
   interface Products {
     product_id: number;
@@ -27,36 +27,50 @@ export function ProductCards() {
     prepare();
   }, []);
 
-  function handleProductPress (product_id) {
-  const user_id = user.user_id
-  postProductToCart(user_id, product_id, 1)
+  function handleProductPress(product_id) {
+    const user_id = user.user_id;
+    postProductToCart(user_id, product_id, 1);
   }
-
 
   return (
     <View>
-      <FlatList data={products} renderItem={
-        (itemData) => {
+      <FlatList
+        data={products}
+        renderItem={(itemData) => {
           return (
-          <View style={styles.cardContainer}>
-            <Image
-            key={itemData.index}
-              style={styles.image}
-              source={{ uri: itemData.item.product_image_url }}
-            />
-            <View style={styles.productTextContainer}>
-            <View style={styles.productDetails}>
-              <Text style={styles.productName}>{itemData.item.product_name}</Text>
-              <Text style={styles.description}>{itemData.item.description}</Text>
+            <View style={styles.cardContainer}>
+              <Image
+                key={itemData.index}
+                style={styles.image}
+                source={{ uri: itemData.item.product_image_url }}
+              />
+              <View style={styles.productTextContainer}>
+                <View style={styles.productDetails}>
+                  <Text style={styles.productName}>
+                    {itemData.item.product_name}
+                  </Text>
+                  <Text style={styles.description}>
+                    {itemData.item.description}
+                  </Text>
+                </View>
+                <View style={styles.priceContainer}>
+                  <MaterialCommunityIcons.Button
+                    name='cart-outline'
+                    size={18}
+                    backgroundColor={null}
+                    color={"black"}
+                    onPress={() => handleProductPress(itemData.item.product_id)}
+                  />
+                  <Text style={styles.price}>
+                    £{(itemData.item.price / 100).toFixed(2)}
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.priceContainer}>
-              <MaterialCommunityIcons.Button name="cart-outline" size={18} backgroundColor={null} color={'black'} onPress={() => handleProductPress(itemData.item.product_id)}/>
-                <Text style={styles.price}>£{((itemData.item.price)/100).toFixed(2)}</Text>
-              </View>
-              </View>
-          </View>)
-      }}
-      keyExtractor={(item) => item.product_id}/>
+          );
+        }}
+        keyExtractor={(item) => item.product_id}
+      />
     </View>
   );
 }
@@ -69,11 +83,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   productTextContainer: {
-  width: '60%'
+    width: "60%",
   },
   productDetails: {
-  marginHorizontal: 16,
-  marginTop: 4
+    marginHorizontal: 16,
+    marginTop: 4,
   },
   image: {
     width: 150,
@@ -83,7 +97,7 @@ const styles = StyleSheet.create({
   productName: {
     fontWeight: "bold",
     fontSize: 24,
-    textTransform: 'capitalize'
+    textTransform: "capitalize",
   },
   description: {
     marginTop: 16,
@@ -94,9 +108,9 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: 45,
     marginLeft: 18,
   },
