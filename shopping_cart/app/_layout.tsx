@@ -2,50 +2,46 @@ import AddProductModal from "@/components/AddProductModal";
 import { Stack, Link } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export default function RootLayout() {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const router = useRouter();
-
   return (
-    // <Stack>
-    // {/* <Pressable onPress={() => setModalVisible(true)}>
-    //   <Text>Add Product</Text>
-    // </Pressable> */}
     <>
-      <Stack />
-      <AddProductModal />
-    </>
-    // {/* <Stack.Screen
-    //   name='index'
-    //   options={{
-    //     headerRight: () => (
-    //       <View style={styles.rightHeaderContrainer}>
-    //         <View style={styles.pressable}></View>
+      <Stack
+        screenOptions={{
+          headerRight: () => (
+            <View style={styles.rightHeaderContainer}>
+              {/* Add Product button */}
+              <Pressable onPress={() => setModalVisible(true)} style={styles.pressable}>
+                <Text>Add Product</Text>
+              </Pressable>
 
-    //         <Link href='/cart' asChild>
-    //           <Pressable style={styles.pressable}>
-    //             <Text>Checkout</Text>
-    //           </Pressable>
-    //         </Link>
-    //       </View>
-    //     ),
-    //   }}
-    // />
-    // <Stack.Screen name='cart' /> */}
-    // </Stack>
+              {/* Checkout button */}
+              <Link href="/cart" asChild>
+                <Pressable style={styles.pressable}>
+                  <Text>Checkout</Text>
+                </Pressable>
+              </Link>
+            </View>
+          ),
+        }}
+      />
+      {/* AddProductModal component (control its visibility) */}
+      <AddProductModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  rightHeaderContrainer: {
+  rightHeaderContainer: {
     flexDirection: "row",
-    margin: "auto",
+    justifyContent: "space-between", 
+    alignItems: "center",
+    marginRight: 20, 
   },
   pressable: {
-    margin: 65,
+    marginHorizontal: 10,
   },
 });

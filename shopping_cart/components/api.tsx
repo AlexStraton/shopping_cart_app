@@ -25,3 +25,13 @@ export async function postProductToCart(user_id: number, product_id: number, qua
     console.log(error);
   }
 }
+
+export async function postProduct(body) {
+try {
+  const response = await api.post("/products", body)
+  return response
+}
+catch (error) {
+  console.log(error)
+}
+}
