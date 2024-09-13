@@ -3,12 +3,15 @@ import { View, Text, StyleSheet, Image, FlatList } from "react-native";
 import { getAllProducts } from "./api";
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { postProductToCart } from "./api";
+import { postProductToCart, getAllProductsInCart } from "./api";
 import { User } from "./context/User";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 
+
 export function ProductCards() {
   const [products, setProducts] = useState([]);
+  const [productsInCart, setProductsInCart] = useState([])
+
   const { user } = useContext(User);
 
   console.log(user);
@@ -21,14 +24,30 @@ export function ProductCards() {
   }
 
   useEffect(() => {
-    async function prepare() {
+    async function prepareProducts() {
       const allProducts = await getAllProducts();
       setProducts(allProducts);
     }
-    prepare();
+    prepareProducts();
   }, []);
 
+  useEffect(() => {
+    async function prepareProductsInCart() {
+      const userId = user.user_id
+      const allProductsInCart = await getAllProductsInCart(userId);
+      setProductsInCart(allProductsInCart);
+    }
+    prepareProductsInCart();
+  }, [productsInCart]);
+
   function handleProductPress(product_id) {
+    //check against products in cart for product id
+    // if no product id in cart, post product to cart
+    // if product id IS in cart, send patch request to api to increase quantity by 1
+    // When making patch request, send arguments of (cart_line_id, body)
+    // body should be an object with quantity - quantity needs to = current quantity + 1
+
+    //Do we instead conditionally render a + and - if there is products in cart?
     const user_id = user.user_id;
     postProductToCart(user_id, product_id, 1);
   }

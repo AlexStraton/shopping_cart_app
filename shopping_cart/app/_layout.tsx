@@ -20,12 +20,12 @@ export default function RootLayout() {
                 <Text>Add Product</Text>
               </Pressable>
 
-              {/* Checkout button */}
-              {/* <Link href="/cart" asChild>
+              {/* Checkout button NEEDS TO UPDATE TO CHANGE SCREEN ON INDEX*/}
+              <Link href="/cart" asChild>
                 <Pressable style={styles.pressable}>
                   <Text>Checkout</Text>
                 </Pressable>
-              </Link> */}
+              </Link>
             </View>
           ),
         }}

@@ -11,9 +11,8 @@ export function Cart() {
 
   useEffect(() => {
     async function prepare() {
-      console.log(user);
       if (user) {
-        const userId = user;
+        const userId = user.user_id;
         const allProductsInCart = await getAllProductsInCart(userId);
         setProductsInCart(allProductsInCart);
       } else {
@@ -25,7 +24,6 @@ export function Cart() {
 
   return (
     <View>
-      <Text>Hellooo</Text>
       <FlatList
         data={productsInCart}
         renderItem={(itemData) => {
@@ -41,27 +39,21 @@ export function Cart() {
                   <Text style={styles.productName}>
                     {itemData.item.product_name}
                   </Text>
-                  <Text style={styles.description}>
-                    {itemData.item.description}
-                  </Text>
                 </View>
                 <View style={styles.priceContainer}>
-                  <MaterialCommunityIcons.Button
-                    name='cart-outline'
-                    size={18}
-                    backgroundColor={null}
-                    color={"black"}
-                    onPress={() => handleProductPress(itemData.item.product_id)}
-                  />
+                  <MaterialCommunityIcons name="minus-circle-outline" size={16}/>
+                  <Text>{itemData.item.quantity}</Text>
+                  <MaterialCommunityIcons name="plus-circle-outline" size={16}/>
+                  <MaterialCommunityIcons name="cart-remove" size={16} />
                   <Text style={styles.price}>
-                    £{(itemData.item.price / 100).toFixed(2)}
+                    Total: £{((itemData.item.price * itemData.item.quantity) / 100).toFixed(2)}
                   </Text>
                 </View>
               </View>
             </View>
           );
         }}
-        keyExtractor={(item) => item.product_id}
+        keyExtractor={(item) => item.cart_line_id}
       />
     </View>
   );
@@ -83,8 +75,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 80,
+    height: 80,
     borderRadius: 8,
   },
   productName: {
@@ -104,7 +96,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 45,
     marginLeft: 18,
   },
 });

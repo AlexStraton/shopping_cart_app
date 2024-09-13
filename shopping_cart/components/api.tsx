@@ -42,10 +42,18 @@ export async function postProduct(body) {
 
 export async function getAllProductsInCart(userId) {
   try {
-    const productsInCart = await api.get("/productsInCart/${userId}");
-    console.log(productsInCart.data);
-    return productsInCart.data.products;
+    const productsInCart = await api.get(`/productsInCart/${userId}`);
+    return productsInCart.data.productsInCart;
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function patchProductInCart(cart_line_id, body) {
+  try {
+    const productPatched = await api.patch(`/productsInCart/${cart_line_id}`, body)
+    return productPatched.data.updatedProduct; }
+    catch (error) {
+      console.log(error)
+    }
 }
