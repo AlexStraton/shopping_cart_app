@@ -5,6 +5,7 @@ import { UserProvider } from "@/components/context/User";
 import { Cart } from "@/components/Cart";
 
 export default function Products() {
+  // NEED TO SET UP SO PRODUCTCARDS RENDERS INITIALLY AS SCREEN, CART RENDERS WHEN BUTTON PRESSED//
   let screen = <Cart />;
 
   return (
