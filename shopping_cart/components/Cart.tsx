@@ -1,42 +1,33 @@
-import { useEffect, useState, useContext } from "react";
-import { View, Text, StyleSheet, Image, FlatList } from "react-native";
-import { getAllProducts } from "./api";
-import { Colors } from "@/constants/Colors";
+import { Text, View, Image, FlatList, StyleSheet } from "react-native";
+import { useState, useEffect, useContext } from "react";
+import { getAllProductsInCart } from "./api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { postProductToCart } from "./api";
+import { Colors } from "@/constants/Colors";
 import { User } from "./context/User";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 
-export function ProductCards() {
-  const [products, setProducts] = useState([]);
+export function Cart() {
+  const [productsInCart, setProductsInCart] = useState([]);
   const { user } = useContext(User);
-
-  console.log(user);
-  interface Products {
-    product_id: number;
-    product_name: string;
-    price: number;
-    product_image_url: string;
-    description: string;
-  }
 
   useEffect(() => {
     async function prepare() {
-      const allProducts = await getAllProducts();
-      setProducts(allProducts);
+      console.log(user);
+      if (user) {
+        const userId = user;
+        const allProductsInCart = await getAllProductsInCart(userId);
+        setProductsInCart(allProductsInCart);
+      } else {
+        console.log("no user found");
+      }
     }
     prepare();
-  }, []);
-
-  function handleProductPress(product_id) {
-    const user_id = user.user_id;
-    postProductToCart(user_id, product_id, 1);
-  }
+  }, [user]);
 
   return (
     <View>
+      <Text>Hellooo</Text>
       <FlatList
-        data={products}
+        data={productsInCart}
         renderItem={(itemData) => {
           return (
             <View style={styles.cardContainer}>
@@ -75,6 +66,7 @@ export function ProductCards() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: Colors.primary,

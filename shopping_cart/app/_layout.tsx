@@ -14,22 +14,27 @@ export default function RootLayout() {
           headerRight: () => (
             <View style={styles.rightHeaderContainer}>
               {/* Add Product button */}
-              <Pressable onPress={() => setModalVisible(true)} style={styles.pressable}>
+              <Pressable
+                onPress={() => setModalVisible(true)}
+                style={styles.pressable}>
                 <Text>Add Product</Text>
               </Pressable>
 
               {/* Checkout button */}
-              <Link href="/cart" asChild>
+              {/* <Link href="/cart" asChild>
                 <Pressable style={styles.pressable}>
                   <Text>Checkout</Text>
                 </Pressable>
-              </Link>
+              </Link> */}
             </View>
           ),
         }}
       />
       {/* AddProductModal component (control its visibility) */}
-      <AddProductModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+      <AddProductModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </>
   );
 }
@@ -37,9 +42,9 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   rightHeaderContainer: {
     flexDirection: "row",
-    justifyContent: "space-between", 
+    justifyContent: "space-between",
     alignItems: "center",
-    marginRight: 20, 
+    marginRight: 20,
   },
   pressable: {
     marginHorizontal: 10,

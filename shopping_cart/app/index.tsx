@@ -2,9 +2,10 @@ import { ProductCards } from "@/components/ProductCards";
 import { Text, View, StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { UserProvider } from "@/components/context/User";
+import { Cart } from "@/components/Cart";
 
 export default function Products() {
-  let screen = <ProductCards />;
+  let screen = <Cart />;
 
   return (
     <UserProvider>
