@@ -1,38 +1,28 @@
 import { Modal, Pressable, Text, View, TextInput, Alert } from "react-native";
 import { StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { postProduct } from "./api";
+import { Formik } from "formik";
+import { productFormSchema } from "./schema/productValidation";
 
 export default function AddProduct({ visible, onClose }) {
-  const [formData, setFormData] = useState({
-    product_name: "",
-    description: "",
-    price: "",
-    product_image_url: "",
-  });
 
-  function handleChange(value: string, fieldName: string) {
-    setFormData((prevData) => ({
-      ...prevData,
-      [fieldName]: value,
-    }));
-  }
-
-  async function handleSubmit() {
+  async function handleSubmit(values: any, resetForm: any) {
     try {
-      const response = await postProduct(formData);
+      const response = await postProduct(values);
   
       if (response && response.status === 201) {
         Alert.alert("Successfully Added", "Your product has been added", [
           {
             text: "Confirm",
-            onPress: () => onClose(),
+            onPress: () => {
+              resetForm();
+              onClose();
+            },
             style: "cancel",
           },
         ]);
       } else {
-
         Alert.alert(
           "Not Added",
           "Your product could not be added, please try again",
@@ -65,61 +55,102 @@ export default function AddProduct({ visible, onClose }) {
       visible={visible}
       onRequestClose={onClose}
     >
-      {/* Modal overlay */}
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalOverlay}>
-          {/* This prevents clicks inside the modal from closing it */}
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modal}>
-              {/* Modal Content */}
-              <Pressable onPress={onClose} style={styles.closeButton}>
-                <MaterialCommunityIcons name="close-circle-outline" size={24} />
-              </Pressable>
-              <View style={styles.inputField}>
-                <Text>Product Name: </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Name..."
-                  value={formData.product_name}
-                  onChangeText={(value) => handleChange(value, "product_name")}
-                />
-              </View>
-              <View style={styles.inputField}>
-                <Text>Description: </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Description..."
-                  value={formData.description}
-                  onChangeText={(value) => handleChange(value, "description")}
-                />
-              </View>
-              <View style={styles.inputField}>
-                <Text>Price: </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Price..."
-                  keyboardType="number-pad"
-                  value={formData.price}
-                  onChangeText={(value) => handleChange(value, "price")}
-                />
-              </View>
-              <View style={styles.inputField}>
-                <Text>Image URL: </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Image URL..."
-                  value={formData.product_image_url}
-                  onChangeText={(value) =>
-                    handleChange(value, "product_image_url")
-                  }
-                />
-              </View>
-              <Pressable
-                style={styles.addButton}
-                onPress={() => handleSubmit()}
+              <Formik
+                initialValues={{
+                  product_name: "",
+                  description: "",
+                  price: "",
+                  product_image_url: "",
+                }}
+                validationSchema={productFormSchema}
+                onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
               >
-                <Text>Add Product</Text>
-              </Pressable>
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                }) => (
+                  <>
+                    <Pressable onPress={onClose} style={styles.closeButton}>
+                      <MaterialCommunityIcons name="close-circle-outline" size={24} />
+                    </Pressable>
+
+                    <View style={styles.inputField}>
+                      <Text>Product Name: </Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Name..."
+                        onChangeText={handleChange("product_name")}
+                        onBlur={handleBlur("product_name")}
+                        value={values.product_name}
+                      />
+                      {touched.product_name && errors.product_name && (
+                        <Text style={styles.errorText}>{errors.product_name}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.inputField}>
+                      <Text style= {styles.inputLabel}>Description: </Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Description..."
+                        onChangeText={handleChange("description")}
+                        onBlur={handleBlur("description")}
+                        value={values.description}
+                        multiline
+                        numberOfLines={4}
+                        maxLength={100}
+                      />
+                      {touched.description && errors.description && (
+                        <Text style={styles.errorText}>{errors.description}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.inputField}>
+                      <Text>Price: </Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Price..."
+                        keyboardType="number-pad"
+                        onChangeText={handleChange("price")}
+                        onBlur={handleBlur("price")}
+                        value={values.price}
+                      />
+                      {touched.price && errors.price && (
+                        <Text style={styles.errorText}>{errors.price}</Text>
+                      )}
+                    </View>
+
+                    <View style={styles.inputField}>
+                      <Text>Image URL: </Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Image URL..."
+                        onChangeText={handleChange("product_image_url")}
+                        onBlur={handleBlur("product_image_url")}
+                        value={values.product_image_url}
+                      />
+                      {touched.product_image_url && errors.product_image_url && (
+                        <Text style={styles.errorText}>{errors.product_image_url}</Text>
+                      )}
+                    </View>
+
+                    <Pressable
+                      style={styles.addButton}
+                      onPress={handleSubmit}
+                    >
+                      <Text>Add Product</Text>
+                    </Pressable>
+                  </>
+                )}
+              </Formik>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -137,7 +168,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: "white",
-    height: 350,
+    height: 400,
     width: 400,
     padding: 20,
     borderRadius: 8,
@@ -150,6 +181,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 20,
     marginLeft: 8,
+    flex: 1,
   },
   inputField: {
     flexDirection: "row",
@@ -168,4 +200,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 10,
   },
+  errorText: {
+    flex: 1,
+    flexWrap: "wrap",
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
+  },
+  inputLabel: {
+    textAlignVertical: "center"
+  }
 });
