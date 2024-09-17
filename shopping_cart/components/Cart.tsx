@@ -25,21 +25,23 @@ export function Cart() {
 
   async function handleQuantityChange(direction, quantity, cartLineId) {
     let adjustedQuantity = quantity + 1;
-    if (direction === "minus") {
-      adjustedQuantity -= 2;
+    if (direction === "minus" && quantity > 0) {
+      adjustedQuantity = quantity - 1;
     }
-    const body = { quantity: adjustedQuantity };
+    if (direction === "minus" && quantity === 0) {
+      return;
+    }
 
+    const body = { quantity: adjustedQuantity };
     const previousCart = [...productsInCart];
 
     setProductsInCart((prevItems) => {
-      prevItems.map((item) =>
+      return prevItems.map((item) =>
         item.cart_line_id === cartLineId
           ? { ...item, quantity: adjustedQuantity }
           : item
       );
     });
-
     try {
       await patchProductInCart(cartLineId, body);
     } catch (error) {
@@ -50,7 +52,6 @@ export function Cart() {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
       ]);
       setProductsInCart(previousCart);
     }
@@ -77,7 +78,11 @@ export function Cart() {
                 <View style={styles.priceContainer}>
                   <MaterialCommunityIcons
                     onPress={() => {
-                      handleQuantityChange("minus");
+                      handleQuantityChange(
+                        "minus",
+                        itemData.item.quantity,
+                        itemData.item.cart_line_id
+                      );
                     }}
                     name='minus-circle-outline'
                     size={16}
