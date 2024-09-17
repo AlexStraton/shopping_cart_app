@@ -1,10 +1,10 @@
-import { Text, View, Image, FlatList, StyleSheet, Alert } from "react-native";
+import { Text, View, Image, FlatList, StyleSheet, Alert, Pressable } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { getAllProductsInCart } from "./api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { User } from "./context/User";
-import { patchProductInCart } from "./api";
+import { patchProductInCart, deleteProductInCart, deleteAllProductsInCart } from "./api";
 
 export function Cart() {
   const [productsInCart, setProductsInCart] = useState([]);
@@ -57,8 +57,94 @@ export function Cart() {
     }
   }
 
+  async function handleRemoveItem(cart_line_id: number) {
+    Alert.alert("Remove Item?", "Are you sure you want to remove this?", [
+      {
+        text: "Yes",
+        onPress: () => {
+          removeItem(cart_line_id);
+        },
+      },
+      {
+        text: "No",
+        onPress: () => {
+          return;
+        },
+        style: "cancel",
+      },
+    ]);
+
+    async function removeItem(cart_line_id) {
+
+      const previousCart = [...productsInCart];
+
+      setProductsInCart((prevItems) => {
+        return prevItems.filter(item => item.cart_line_id !== cart_line_id);
+      });
+
+      try {
+        deleteProductInCart(cart_line_id);
+      } catch (error) {
+        console.log(error);
+        setProductsInCart(previousCart)
+        Alert.alert(
+          "Error removing item",
+          "Your item has not been removed, try again",
+          [
+            {
+              text: "Ok",
+              style: "cancel",
+            },
+          ]
+        );
+      }
+    }
+  }
+
+  async function handleDeleteBasket () {
+    Alert.alert("Delete Cart", "Are you sure you want to remove all items?", [
+      {
+        text: "Yes",
+        onPress: () => {
+          deleteBasket();
+        },
+      },
+      {
+        text: "No",
+        onPress: () => {
+          return;
+        },
+        style: "cancel",
+      },
+    ]);
+    
+    async function deleteBasket() {
+      const previousCart = [...productsInCart]
+      setProductsInCart([])
+      try{
+      await deleteAllProductsInCart(user.user_id)
+      }
+      catch(error) {
+        console.log(error);
+        setProductsInCart(previousCart)
+        Alert.alert(
+          "Error removing items",
+          "Your items have not been removed, try again",
+          [
+            {
+              text: "Ok",
+              style: "cancel",
+            },
+          ]
+        );
+      }
+
+    }
+  }
+
   return (
-    <View>
+    <View style={styles.screen}>
+      {productsInCart.length === 0 && (<View style={styles.noProducts}><Text>You have no products in your cart</Text></View>)}
       <FlatList
         data={productsInCart}
         renderItem={(itemData) => {
@@ -84,7 +170,7 @@ export function Cart() {
                         itemData.item.cart_line_id
                       );
                     }}
-                    name='minus-circle-outline'
+                    name="minus-circle-outline"
                     size={16}
                   />
                   <Text>{itemData.item.quantity}</Text>
@@ -96,10 +182,16 @@ export function Cart() {
                         itemData.item.cart_line_id
                       );
                     }}
-                    name='plus-circle-outline'
+                    name="plus-circle-outline"
                     size={16}
                   />
-                  <MaterialCommunityIcons name='cart-remove' size={16} />
+                  <MaterialCommunityIcons
+                    name="cart-remove"
+                    size={16}
+                    onPress={() => {
+                      handleRemoveItem(itemData.item.cart_line_id);
+                    }}
+                  />
                   <Text style={styles.price}>
                     Total: £
                     {(
@@ -114,11 +206,22 @@ export function Cart() {
         }}
         keyExtractor={(item) => item.cart_line_id}
       />
+      <View style={styles.buttonView}>
+      <Pressable style={styles.button} onPress={handleDeleteBasket}>
+        <Text>Discard Basket</Text>
+      </Pressable>
+      <Pressable style={styles.button}>
+        <Text>Checkout</Text>
+      </Pressable>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1
+  },
   cardContainer: {
     backgroundColor: Colors.primary,
     padding: 12,
@@ -157,4 +260,23 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginLeft: 18,
   },
+  buttonView: {
+    flexDirection: "row",
+    margin: 12,
+  },
+  button: {
+    borderColor: "black",
+    borderWidth: 2,
+    width: 100,
+    padding: 8,
+    borderRadius: 10,
+    alignSelf: "center",
+    marginTop: 10,
+    marginLeft: 24,  
+  },
+  noProducts: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });

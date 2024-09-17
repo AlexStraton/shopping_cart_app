@@ -31,7 +31,7 @@ export async function postProductToCart(
   }
 }
 
-export async function postProduct(body) {
+export async function postProduct(body: {}) {
   try {
     const response = await api.post("/products", body);
     return response;
@@ -40,7 +40,7 @@ export async function postProduct(body) {
   }
 }
 
-export async function getAllProductsInCart(userId) {
+export async function getAllProductsInCart(userId: number) {
   try {
     const productsInCart = await api.get(`/productsInCart/${userId}`);
     return productsInCart.data.productsInCart;
@@ -58,5 +58,22 @@ export async function patchProductInCart(cart_line_id: number, body: {}) {
     return productPatched.data.updatedProduct;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function deleteProductInCart(cart_line_id: number) {
+  try {
+    await api.delete(`/productsInCart/${cart_line_id}`)
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+export async function deleteAllProductsInCart(user_id: number) {
+  try {
+    await api.delete(`/productsInCart/user/${user_id}`)
+  } catch (error) {
+    console.log(error)
   }
 }
