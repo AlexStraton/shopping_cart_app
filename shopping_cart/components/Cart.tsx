@@ -1,9 +1,10 @@
-import { Text, View, Image, FlatList, StyleSheet } from "react-native";
+import { Text, View, Image, FlatList, StyleSheet, Alert } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { getAllProductsInCart } from "./api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { User } from "./context/User";
+import { patchProductInCart } from "./api";
 
 export function Cart() {
   const [productsInCart, setProductsInCart] = useState([]);
@@ -21,6 +22,39 @@ export function Cart() {
     }
     prepare();
   }, [user]);
+
+  async function handleQuantityChange(direction, quantity, cartLineId) {
+    let adjustedQuantity = quantity + 1;
+    if (direction === "minus") {
+      adjustedQuantity -= 2;
+    }
+    const body = { quantity: adjustedQuantity };
+
+    const previousCart = [...productsInCart];
+
+    setProductsInCart((prevItems) => {
+      prevItems.map((item) =>
+        item.cart_line_id === cartLineId
+          ? { ...item, quantity: adjustedQuantity }
+          : item
+      );
+    });
+
+    try {
+      await patchProductInCart(cartLineId, body);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error updating cart", "Please try again", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+      setProductsInCart(previousCart);
+    }
+  }
 
   return (
     <View>
@@ -41,12 +75,32 @@ export function Cart() {
                   </Text>
                 </View>
                 <View style={styles.priceContainer}>
-                  <MaterialCommunityIcons name="minus-circle-outline" size={16}/>
+                  <MaterialCommunityIcons
+                    onPress={() => {
+                      handleQuantityChange("minus");
+                    }}
+                    name='minus-circle-outline'
+                    size={16}
+                  />
                   <Text>{itemData.item.quantity}</Text>
-                  <MaterialCommunityIcons name="plus-circle-outline" size={16}/>
-                  <MaterialCommunityIcons name="cart-remove" size={16} />
+                  <MaterialCommunityIcons
+                    onPress={() => {
+                      handleQuantityChange(
+                        "plus",
+                        itemData.item.quantity,
+                        itemData.item.cart_line_id
+                      );
+                    }}
+                    name='plus-circle-outline'
+                    size={16}
+                  />
+                  <MaterialCommunityIcons name='cart-remove' size={16} />
                   <Text style={styles.price}>
-                    Total: £{((itemData.item.price * itemData.item.quantity) / 100).toFixed(2)}
+                    Total: £
+                    {(
+                      (itemData.item.price * itemData.item.quantity) /
+                      100
+                    ).toFixed(2)}
                   </Text>
                 </View>
               </View>

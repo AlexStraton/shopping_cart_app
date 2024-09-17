@@ -49,11 +49,14 @@ export async function getAllProductsInCart(userId) {
   }
 }
 
-export async function patchProductInCart(cart_line_id, body) {
+export async function patchProductInCart(cart_line_id: number, body: {}) {
   try {
-    const productPatched = await api.patch(`/productsInCart/${cart_line_id}`, body)
-    return productPatched.data.updatedProduct; }
-    catch (error) {
-      console.log(error)
-    }
+    const productPatched = await api.patch(
+      `/productsInCart/${cart_line_id}`,
+      body
+    );
+    return productPatched.data.updatedProduct;
+  } catch (error) {
+    console.log(error);
+  }
 }
