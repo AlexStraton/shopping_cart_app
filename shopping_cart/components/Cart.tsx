@@ -35,7 +35,7 @@ export function Cart() {
     prepare();
   }, [user]);
 
-  async function handleQuantityChange(direction, quantity, cartLineId) {
+  async function handleQuantityChange(direction: string, quantity: number, cartLineId: number) {
     let adjustedQuantity = quantity + 1;
     if (direction === "minus" && quantity > 0) {
       adjustedQuantity = quantity - 1;
@@ -86,7 +86,7 @@ export function Cart() {
       },
     ]);
 
-    async function removeItem(cart_line_id) {
+    async function removeItem(cart_line_id: number) {
       const previousCart = [...productsInCart];
 
       setProductsInCart((prevItems) => {

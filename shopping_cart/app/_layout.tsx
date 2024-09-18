@@ -1,19 +1,16 @@
 import AddProductModal from "@/components/AddProductModal";
-import { Stack, Link } from "expo-router";
+import { Stack} from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
-import Index from ".";
+import { ScreenProvider } from "@/components/context/Screen";
+import NavButtons from "@/components/NavButtons";
 
 export default function RootLayout() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [screen, setScreen] = useState("ProductCards");
 
-  function handleScreenChange() {
-    setScreen("Cart");
-  }
   return (
-    <>
+    <ScreenProvider>
       <Stack
         screenOptions={{
           headerRight: () => (
@@ -23,21 +20,10 @@ export default function RootLayout() {
                 style={styles.pressable}>
                 <Text>Add Product</Text>
               </Pressable>
-              {screen === "ProductCards" ? (
-                <Pressable
-                  onPress={handleScreenChange}
-                  style={styles.pressable}>
-                  <Text>Checkout</Text>
-                </Pressable>
-              ) : (
-                <Pressable
-                  onPress={handleScreenChange}
-                  style={styles.pressable}>
-                  <Text>Home</Text>
-                </Pressable>
-              )}
+            <NavButtons />
             </View>
           ),
+          headerTitle: "Shopping Cart"
         }}
       />
 
@@ -45,7 +31,7 @@ export default function RootLayout() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       />
-    </>
+    </ScreenProvider>
   );
 }
 

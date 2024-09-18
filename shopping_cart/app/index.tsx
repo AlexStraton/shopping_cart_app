@@ -1,21 +1,21 @@
 import { View, StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { UserProvider } from "@/components/context/User";
+import { Screen } from "@/components/context/Screen";
+import { useContext } from "react";
 import { ProductCards } from "@/components/ProductCards";
 import { Cart } from "@/components/Cart";
-import { ScreenProvider, Screen } from "@/components/context/Screen";
-import { useContext } from "react";
 
 export default function Index({}) {
-  // NEED TO SET UP SO PRODUCTCARDS RENDERS INITIALLY AS SCREEN, CART RENDERS WHEN BUTTON PRESSED//
-  const { Screen } = useContext(Screen);
+  
+  const {screen} = useContext(Screen)
+
+  let screenPage = screen === "Cart" ? <Cart /> : <ProductCards />;
 
   return (
-    <ScreenProvider>
       <UserProvider>
-        <View style={styles.inputContainer}>{screen}</View>
+        <View style={styles.inputContainer}>{screenPage}</View>
       </UserProvider>
-    </ScreenProvider>
   );
 }
 const styles = StyleSheet.create({
