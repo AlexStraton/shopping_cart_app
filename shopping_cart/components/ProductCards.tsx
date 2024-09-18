@@ -7,14 +7,12 @@ import { postProductToCart, getAllProductsInCart } from "./api";
 import { User } from "./context/User";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 
-
 export function ProductCards() {
   const [products, setProducts] = useState([]);
-  const [productsInCart, setProductsInCart] = useState([])
+  const [productsInCart, setProductsInCart] = useState([]);
 
   const { user } = useContext(User);
 
-  console.log(user);
   interface Products {
     product_id: number;
     product_name: string;
@@ -33,7 +31,7 @@ export function ProductCards() {
 
   useEffect(() => {
     async function prepareProductsInCart() {
-      const userId = user.user_id
+      const userId = user.user_id;
       const allProductsInCart = await getAllProductsInCart(userId);
       setProductsInCart(allProductsInCart);
     }

@@ -10,8 +10,7 @@ export default function Products() {
 
   return (
     <UserProvider>
-      <View style={styles.inputContainer}></View>
-      {screen}
+      <View style={styles.inputContainer}>{screen}</View>
     </UserProvider>
   );
 }
