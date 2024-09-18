@@ -1,16 +1,16 @@
 import React, { createContext, useState, ReactNode } from 'react';
-interface User {
+export interface UserType {
   user_id: number;
 }
-interface UserContextType {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+export interface UserContextType {
+  user: UserType;
+  setUser: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 export const User = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User>({ user_id: 1 });
+  const [user, setUser] = useState<UserType>({ user_id: 1 });
 
   return (
     <User.Provider value={{ user, setUser }}>

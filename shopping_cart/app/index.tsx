@@ -8,7 +8,13 @@ import { Cart } from "@/components/Cart";
 
 export default function Index({}) {
   
-  const {screen} = useContext(Screen)
+  const context = useContext(Screen)
+
+  if (!context) {
+    throw new Error("Screen context must be used within a Screen Provider")
+  }
+
+  const {screen} = context
 
   let screenPage = screen === "Cart" ? <Cart /> : <ProductCards />;
 

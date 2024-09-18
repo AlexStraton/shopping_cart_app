@@ -5,13 +5,18 @@ import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { postProductToCart, getAllProductsInCart } from "./api";
 import { User } from "./context/User";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 
 export function ProductCards() {
   const [products, setProducts] = useState([]);
   const [productsInCart, setProductsInCart] = useState([]);
 
-  const { user } = useContext(User);
+  const context = useContext(User);
+
+  if (!context) {
+    throw new Error("User context must be used within a User Provider")
+  }
+
+  const {user} = context
 
   interface Products {
     product_id: number;
@@ -38,7 +43,7 @@ export function ProductCards() {
     prepareProductsInCart();
   }, [productsInCart]);
 
-  function handleProductPress(product_id) {
+  function handleProductPress(product_id: Products["product_id"]) {
     //check against products in cart for product id
     // if no product id in cart, post product to cart
     // if product id IS in cart, send patch request to api to increase quantity by 1
@@ -54,40 +59,39 @@ export function ProductCards() {
     <View>
       <FlatList
         data={products}
-        renderItem={(itemData) => {
+        renderItem={({item} : {item: Products}) => {
           return (
             <View style={styles.cardContainer}>
               <Image
-                key={itemData.index}
+                key={item.product_id}
                 style={styles.image}
-                source={{ uri: itemData.item.product_image_url }}
+                source={{ uri: item.product_image_url }}
               />
               <View style={styles.productTextContainer}>
                 <View style={styles.productDetails}>
                   <Text style={styles.productName}>
-                    {itemData.item.product_name}
+                    {item.product_name}
                   </Text>
                   <Text style={styles.description}>
-                    {itemData.item.description}
+                    {item.description}
                   </Text>
                 </View>
                 <View style={styles.priceContainer}>
-                  <MaterialCommunityIcons.Button
+                  <MaterialCommunityIcons
                     name='cart-outline'
                     size={18}
-                    backgroundColor={null}
                     color={"black"}
-                    onPress={() => handleProductPress(itemData.item.product_id)}
+                    onPress={() => handleProductPress(item.product_id)}
                   />
                   <Text style={styles.price}>
-                    £{(itemData.item.price / 100).toFixed(2)}
+                    £{(item.price / 100).toFixed(2)}
                   </Text>
                 </View>
               </View>
             </View>
           );
         }}
-        keyExtractor={(item) => item.product_id}
+        keyExtractor={(item) => item.product_id.toString()}
       />
     </View>
   );

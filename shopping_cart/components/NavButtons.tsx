@@ -3,7 +3,13 @@ import { Screen } from "./context/Screen";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 export default function NavButtons() {
-  const { screen, setScreen } = useContext(Screen);
+  const context = useContext(Screen);
+
+  if (!context) {
+    throw new Error("Screen context must be used within a Screen Provider")
+  }
+
+  const {screen, setScreen} = context
 
   function handleScreenChange(newScreen: string) {
     return () => setScreen(newScreen);

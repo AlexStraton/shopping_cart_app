@@ -11,16 +11,33 @@ import { useState, useEffect, useContext } from "react";
 import { getAllProductsInCart } from "./api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { User } from "./context/User";
+import { User, UserContextType, UserType } from "./context/User";
 import {
   patchProductInCart,
   deleteProductInCart,
   deleteAllProductsInCart,
 } from "./api";
+import { useNavigatorContext } from "expo-router/build/views/Navigator";
 
 export function Cart() {
-  const [productsInCart, setProductsInCart] = useState([]);
-  const { user } = useContext(User);
+  const [productsInCart, setProductsInCart] = useState<ProductsInCart[]>([]);
+  const context = useContext(User);
+
+  if (!context) {
+    throw new Error("User context must be used within a User Provider")
+  }
+
+  const {user} = context
+
+  interface ProductsInCart {
+    product_id: number;
+    product_name: string;
+    price: number;
+    product_image_url: string;
+    description: string;
+    cart_line_id: number;
+    quantity: number;
+  }
 
   useEffect(() => {
     async function prepare() {
@@ -47,8 +64,8 @@ export function Cart() {
     const body = { quantity: adjustedQuantity };
     const previousCart = [...productsInCart];
 
-    setProductsInCart((prevItems) => {
-      return prevItems.map((item) =>
+    setProductsInCart((prevItems ) => {
+      return prevItems.map((item: ProductsInCart) =>
         item.cart_line_id === cartLineId
           ? { ...item, quantity: adjustedQuantity }
           : item
@@ -90,7 +107,7 @@ export function Cart() {
       const previousCart = [...productsInCart];
 
       setProductsInCart((prevItems) => {
-        return prevItems.filter((item) => item.cart_line_id !== cart_line_id);
+        return prevItems.filter((item: ProductsInCart) => item.cart_line_id !== cart_line_id);
       });
 
       try {
@@ -160,18 +177,18 @@ export function Cart() {
       )}
       <FlatList
         data={productsInCart}
-        renderItem={(itemData) => {
+        renderItem={({item} : {item: ProductsInCart}) => {
           return (
             <View style={styles.cardContainer}>
               <Image
-                key={itemData.index}
+                key={item.cart_line_id}
                 style={styles.image}
-                source={{ uri: itemData.item.product_image_url }}
+                source={{ uri: item.product_image_url }}
               />
               <View style={styles.productTextContainer}>
                 <View style={styles.productDetails}>
                   <Text style={styles.productName}>
-                    {itemData.item.product_name}
+                    {item.product_name}
                   </Text>
                 </View>
                 <View style={styles.priceContainer}>
@@ -179,20 +196,20 @@ export function Cart() {
                     onPress={() => {
                       handleQuantityChange(
                         "minus",
-                        itemData.item.quantity,
-                        itemData.item.cart_line_id
+                        item.quantity,
+                        item.cart_line_id
                       );
                     }}
                     name='minus-circle-outline'
                     size={16}
                   />
-                  <Text>{itemData.item.quantity}</Text>
+                  <Text>{item.quantity}</Text>
                   <MaterialCommunityIcons
                     onPress={() => {
                       handleQuantityChange(
                         "plus",
-                        itemData.item.quantity,
-                        itemData.item.cart_line_id
+                        item.quantity,
+                        item.cart_line_id
                       );
                     }}
                     name='plus-circle-outline'
@@ -202,13 +219,13 @@ export function Cart() {
                     name='cart-remove'
                     size={16}
                     onPress={() => {
-                      handleRemoveItem(itemData.item.cart_line_id);
+                      handleRemoveItem(item.cart_line_id);
                     }}
                   />
                   <Text style={styles.price}>
                     Total: £
                     {(
-                      (itemData.item.price * itemData.item.quantity) /
+                      (item.price * item.quantity) /
                       100
                     ).toFixed(2)}
                   </Text>
@@ -217,7 +234,7 @@ export function Cart() {
             </View>
           );
         }}
-        keyExtractor={(item) => item.cart_line_id}
+        keyExtractor={(item) => item.cart_line_id.toString()}
       />
       <View style={styles.buttonView}>
         <Pressable style={styles.button} onPress={handleDeleteBasket}>

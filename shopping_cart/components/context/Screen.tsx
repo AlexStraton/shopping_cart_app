@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode } from "react";
 
-interface ScreenContextType {
+export interface ScreenContextType {
   screen: string;
   setScreen: React.Dispatch<React.SetStateAction<string>>;
 }
