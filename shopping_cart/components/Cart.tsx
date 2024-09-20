@@ -9,25 +9,27 @@ import {
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { getAllProductsInCart } from "./api";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { Colors } from "@/constants/Colors";
-import { User, UserContextType, UserType } from "./context/User";
+import { User } from "./context/User";
 import {
   patchProductInCart,
   deleteProductInCart,
   deleteAllProductsInCart,
 } from "./api";
-import { useNavigatorContext } from "expo-router/build/views/Navigator";
+import CheckoutModal from "./CheckoutModal";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export function Cart() {
   const [productsInCart, setProductsInCart] = useState<ProductsInCart[]>([]);
   const context = useContext(User);
+  const [visible, setVisible] = useState(false);
 
   if (!context) {
-    throw new Error("User context must be used within a User Provider")
+    throw new Error("User context must be used within a User Provider");
   }
 
-  const {user} = context
+  const { user } = context;
 
   interface ProductsInCart {
     product_id: number;
@@ -52,7 +54,11 @@ export function Cart() {
     prepare();
   }, [user]);
 
-  async function handleQuantityChange(direction: string, quantity: number, cartLineId: number) {
+  async function handleQuantityChange(
+    direction: string,
+    quantity: number,
+    cartLineId: number
+  ) {
     let adjustedQuantity = quantity + 1;
     if (direction === "minus" && quantity > 0) {
       adjustedQuantity = quantity - 1;
@@ -64,7 +70,7 @@ export function Cart() {
     const body = { quantity: adjustedQuantity };
     const previousCart = [...productsInCart];
 
-    setProductsInCart((prevItems ) => {
+    setProductsInCart((prevItems) => {
       return prevItems.map((item: ProductsInCart) =>
         item.cart_line_id === cartLineId
           ? { ...item, quantity: adjustedQuantity }
@@ -107,7 +113,9 @@ export function Cart() {
       const previousCart = [...productsInCart];
 
       setProductsInCart((prevItems) => {
-        return prevItems.filter((item: ProductsInCart) => item.cart_line_id !== cart_line_id);
+        return prevItems.filter(
+          (item: ProductsInCart) => item.cart_line_id !== cart_line_id
+        );
       });
 
       try {
@@ -177,7 +185,7 @@ export function Cart() {
       )}
       <FlatList
         data={productsInCart}
-        renderItem={({item} : {item: ProductsInCart}) => {
+        renderItem={({ item }: { item: ProductsInCart }) => {
           return (
             <View style={styles.cardContainer}>
               <Image
@@ -187,9 +195,7 @@ export function Cart() {
               />
               <View style={styles.productTextContainer}>
                 <View style={styles.productDetails}>
-                  <Text style={styles.productName}>
-                    {item.product_name}
-                  </Text>
+                  <Text style={styles.productName}>{item.product_name}</Text>
                 </View>
                 <View style={styles.priceContainer}>
                   <MaterialCommunityIcons
@@ -223,11 +229,7 @@ export function Cart() {
                     }}
                   />
                   <Text style={styles.price}>
-                    Total: £
-                    {(
-                      (item.price * item.quantity) /
-                      100
-                    ).toFixed(2)}
+                    Total: £{((item.price * item.quantity) / 100).toFixed(2)}
                   </Text>
                 </View>
               </View>
@@ -240,10 +242,16 @@ export function Cart() {
         <Pressable style={styles.button} onPress={handleDeleteBasket}>
           <Text>Discard Basket</Text>
         </Pressable>
-        <Pressable style={styles.button}>
+        <Pressable onPress={() => setVisible(true)} style={styles.button}>
           <Text>Checkout</Text>
         </Pressable>
       </View>
+      <CheckoutModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        productsInCart={productsInCart}
+        setproducts={}
+      />
     </View>
   );
 }

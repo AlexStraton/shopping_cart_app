@@ -1,5 +1,5 @@
 import AddProductModal from "@/components/AddProductModal";
-import { Stack} from "expo-router";
+import { Stack } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
@@ -20,10 +20,10 @@ export default function RootLayout() {
                 style={styles.pressable}>
                 <Text>Add Product</Text>
               </Pressable>
-            <NavButtons />
+              <NavButtons />
             </View>
           ),
-          headerTitle: "Shopping Cart"
+          headerTitle: "Shopping Cart",
         }}
       />
 
