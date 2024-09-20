@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { View, Text, StyleSheet, Image, FlatList } from "react-native";
+import { View, Text, StyleSheet, Image, FlatList, Alert } from "react-native";
 import { getAllProducts } from "./api";
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -43,16 +43,22 @@ export function ProductCards() {
     prepareProductsInCart();
   }, [productsInCart]);
 
-  function handleProductPress(product_id: Products["product_id"]) {
-    //check against products in cart for product id
-    // if no product id in cart, post product to cart
-    // if product id IS in cart, send patch request to api to increase quantity by 1
-    // When making patch request, send arguments of (cart_line_id, body)
-    // body should be an object with quantity - quantity needs to = current quantity + 1
-
-    //Do we instead conditionally render a + and - if there is products in cart?
+  async function handleProductPress(product_id: Products["product_id"]) {
     const user_id = user.user_id;
+    try {
     postProductToCart(user_id, product_id, 1);
+    Alert.alert("Added to cart", "Item Added!", [
+      {
+        text: "Ok",
+      },
+    ]);}
+    catch(error) {
+      console.log(error)    
+      Alert.alert("Error adding to cart", "Please try again", [
+      {
+        text: "Ok",
+      },
+    ]);}
   }
 
   return (

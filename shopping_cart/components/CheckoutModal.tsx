@@ -1,71 +1,117 @@
-import { Modal, Pressable, Text, View, TextInput, Alert } from "react-native";
-import { StyleSheet, TouchableWithoutFeedback } from "react-native";
-
-import { postProduct } from "./api";
+import {
+  Modal,
+  Pressable,
+  Text,
+  View,
+  Alert,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { postProduct, deleteAllProductsInCart } from "./api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useContext } from "react";
+import { User } from "./context/User";
+import { Screen } from "./context/Screen";
 
-export default function CheckoutModal({ visible, onClose, productsInCart }) {
-  async function handleSubmit(values: any, resetForm: any) {
+export default function CheckoutModal({
+  visible,
+  onClose,
+  productsInCart,
+  setProductsInCart,
+}) {
+  const userContext = useContext(User);
+
+  if (!userContext) {
+    throw new Error("User context must be used within a User Provider");
+  }
+
+  const { user } = userContext;
+
+  const screenContext = useContext(Screen);
+
+  if (!screenContext) {
+    throw new Error("Screen context must be used within a Screen Provider");
+  }
+
+  const { setScreen } = screenContext;
+
+  async function handleSubmit() {
+    const currentProducts = [...productsInCart];
     try {
-      const response = await postProduct(values);
-
-      if (response && response.status === 201) {
-        Alert.alert("Successfully Added", "Your product has been added", [
+      await deleteAllProductsInCart(user.user_id);
+      setProductsInCart([]);
+      Alert.alert(
+        "Checkout Successful",
+        "Your have bought your products! (not really)",
+        [
           {
             text: "Confirm",
             onPress: () => {
-              resetForm();
+              onClose();
+              setScreen("ProductCards");
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      console.log(error);
+      setProductsInCart(currentProducts);
+      Alert.alert(
+        "Error",
+        "An unexpected error has occurred, please try again",
+        [
+          {
+            text: "Ok",
+            onPress: () => {
               onClose();
             },
-            style: "cancel",
           },
-        ]);
-      } else {
-        Alert.alert(
-          "Not Added",
-          "Your product could not be added, please try again",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-          ]
-        );
-      }
-    } catch (error) {
-      Alert.alert("Error", "An unexpected error occurred. Please try again.", [
-        {
-          text: "OK",
-          style: "cancel",
-        },
-      ]);
+        ]
+      );
     }
   }
 
+  type Product = {
+    quantity: number;
+    price: number;
+  };
+
   const total = productsInCart.reduce(
-    (acc: number, product: {}) => product.quantity * product.price + acc,
+    (acc: number, product: Product) => product.quantity * product.price + acc,
     0
   );
 
   return (
     <Modal
-      animationType='slide'
+      animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}>
+      onRequestClose={onClose}
+    >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modal}>
               <Pressable onPress={onClose} style={styles.closeButton}>
-                <MaterialCommunityIcons name='close-circle-outline' size={24} />
+                <MaterialCommunityIcons name="close-circle-outline" size={24} />
               </Pressable>
-              <View>
-                <Text>Total: £{(total / 100).toFixed(2)}</Text>
-              </View>
-              <Pressable onPress={handleSubmit} style={styles.checkoutButton}>
-                <Text>Confirm Purchase</Text>
-              </Pressable>
+              {productsInCart.length > 0 ? (
+                <>
+                  <View>
+                    <Text>Total: £{(total / 100).toFixed(2)}</Text>
+                  </View>
+                  <Pressable
+                    onPress={handleSubmit}
+                    style={styles.checkoutButton}
+                  >
+                    <Text>Confirm Purchase</Text>
+                  </Pressable>
+                </>
+              ) : (
+                <View>
+                  <Text>You have no products in cart</Text>
+                </View>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </View>

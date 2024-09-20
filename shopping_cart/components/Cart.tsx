@@ -250,7 +250,7 @@ export function Cart() {
         visible={visible}
         onClose={() => setVisible(false)}
         productsInCart={productsInCart}
-        setproducts={}
+        setProductsInCart={setProductsInCart}
       />
     </View>
   );
