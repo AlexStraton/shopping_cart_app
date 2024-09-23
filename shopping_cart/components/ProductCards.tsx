@@ -13,10 +13,10 @@ export function ProductCards() {
   const context = useContext(User);
 
   if (!context) {
-    throw new Error("User context must be used within a User Provider")
+    throw new Error("User context must be used within a User Provider");
   }
 
-  const {user} = context
+  const { user } = context;
 
   interface Products {
     product_id: number;
@@ -46,26 +46,27 @@ export function ProductCards() {
   async function handleProductPress(product_id: Products["product_id"]) {
     const user_id = user.user_id;
     try {
-    postProductToCart(user_id, product_id, 1);
-    Alert.alert("Added to cart", "Item Added!", [
-      {
-        text: "Ok",
-      },
-    ]);}
-    catch(error) {
-      console.log(error)    
+      postProductToCart(user_id, product_id, 1);
+      Alert.alert("Added to cart", "Item Added!", [
+        {
+          text: "Ok",
+        },
+      ]);
+    } catch (error) {
+      console.log(error);
       Alert.alert("Error adding to cart", "Please try again", [
-      {
-        text: "Ok",
-      },
-    ]);}
+        {
+          text: "Ok",
+        },
+      ]);
+    }
   }
 
   return (
     <View>
       <FlatList
         data={products}
-        renderItem={({item} : {item: Products}) => {
+        renderItem={({ item }: { item: Products }) => {
           return (
             <View style={styles.cardContainer}>
               <Image
@@ -75,20 +76,17 @@ export function ProductCards() {
               />
               <View style={styles.productTextContainer}>
                 <View style={styles.productDetails}>
-                  <Text style={styles.productName}>
-                    {item.product_name}
-                  </Text>
-                  <Text style={styles.description}>
-                    {item.description}
-                  </Text>
+                  <Text style={styles.productName}>{item.product_name}</Text>
+                  <Text style={styles.description}>{item.description}</Text>
                 </View>
                 <View style={styles.priceContainer}>
                   <MaterialCommunityIcons
                     name='cart-outline'
-                    size={18}
-                    color={"black"}
+                    size={29}
+                    color={"green"}
                     onPress={() => handleProductPress(item.product_id)}
                   />
+
                   <Text style={styles.price}>
                     £{(item.price / 100).toFixed(2)}
                   </Text>
@@ -125,16 +123,22 @@ const styles = StyleSheet.create({
   productName: {
     fontWeight: "bold",
     fontSize: 24,
-    textTransform: "capitalize",
+    textTransform: "uppercase",
+    color: "#00008b",
   },
   description: {
     marginTop: 16,
-    fontSize: 12,
+    fontSize: 16,
+    fontFamily: "Cochin",
   },
   price: {
     padding: 10,
     textAlign: "right",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#b22222",
   },
+
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
