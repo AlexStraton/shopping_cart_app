@@ -22,14 +22,14 @@ export default function NavButtons() {
           onPress={handleScreenChange("Cart")} 
           style={styles.pressable}
         >
-          <Text>Checkout</Text>
+          <Text style={styles.pressableText}>Checkout</Text>
         </Pressable>
       ) : (
         <Pressable
           onPress={handleScreenChange("ProductCards")} 
           style={styles.pressable}
         >
-          <Text>Home</Text>
+          <Text style={styles.pressableText}>Home</Text>
         </Pressable>
       )}
     </>
@@ -39,5 +39,10 @@ export default function NavButtons() {
 const styles = StyleSheet.create({
   pressable: {
     marginHorizontal: 10,
+    paddingBottom: 15,
   },
+  pressableText: {
+    fontWeight: "bold",
+    fontSize: 14,
+  }
 });

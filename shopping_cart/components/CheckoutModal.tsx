@@ -97,19 +97,19 @@ export default function CheckoutModal({
               </Pressable>
               {productsInCart.length > 0 ? (
                 <>
-                  <View>
-                    <Text>Total: £{(total / 100).toFixed(2)}</Text>
+                  <View style={styles.totalContainer}>
+                    <Text style={styles.totalText}>Total: £{(total / 100).toFixed(2)}</Text>
                   </View>
                   <Pressable
                     onPress={handleSubmit}
                     style={styles.checkoutButton}
                   >
-                    <Text>Confirm Purchase</Text>
+                    <Text style={styles.buttonText}>Confirm Purchase</Text>
                   </Pressable>
                 </>
               ) : (
-                <View>
-                  <Text>You have no products in cart</Text>
+                <View >
+                  <Text >You have no products in cart</Text>
                 </View>
               )}
             </View>
@@ -125,14 +125,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
   },
   modal: {
-    backgroundColor: "white",
-    height: 400,
-    width: 400,
+    backgroundColor: "#B7D9DD",
+    height: "20%",
+    width: "90%",
     padding: 20,
-    borderRadius: 8,
+    borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -140,15 +140,31 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     flexDirection: "row-reverse",
-    marginBottom: 20,
   },
   checkoutButton: {
     borderColor: "black",
     borderWidth: 2,
-    width: 100,
-    padding: 8,
+    width: "50%",
+    padding: 12,
     borderRadius: 10,
     alignSelf: "center",
-    marginTop: 10,
+    margin: 20,
+    backgroundColor: "#1F5673",
   },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+  },
+  totalContainer: {
+    height: 30,
+    width: 120,
+    alignSelf: "center",
+  },
+  totalText: {
+    fontFamily: "sans-serif",
+    fontWeight: "bold",
+    fontSize: 18,
+    textAlign: "center",
+    color: "#00008b",
+  }
 });

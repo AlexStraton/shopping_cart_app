@@ -167,12 +167,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 60,
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
   },
   modal: {
     backgroundColor: "#B7D9DD",
-    height: "80%",
+    height: 650,
     width: "95%",
     padding: 20,
     borderRadius: 20,
@@ -189,8 +188,6 @@ const styles = StyleSheet.create({
   },
   inputField: {
     flex: 1,
-
-    // flexDirection: "row",
     marginVertical: 8,
     marginBottom: "5%",
   },
@@ -206,7 +203,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: "center",
     margin: 20,
-
     backgroundColor: "#1F5673",
   },
   buttonText: {
@@ -215,8 +211,8 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 5,
+    marginBottom: 5,
     marginLeft: 4,
     color: "#b22222",
   },
@@ -224,5 +220,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     marginBottom: 10,
     flex: 1,
+    fontWeight: "bold",
   },
 });

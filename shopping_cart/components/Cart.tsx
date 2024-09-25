@@ -207,7 +207,7 @@ export function Cart() {
                       );
                     }}
                     name='minus-circle-outline'
-                    size={16}
+                    size={20}
                   />
                   <Text>{item.quantity}</Text>
                   <MaterialCommunityIcons
@@ -219,18 +219,23 @@ export function Cart() {
                       );
                     }}
                     name='plus-circle-outline'
-                    size={16}
+                    size={20}
                   />
+                  <View>
                   <MaterialCommunityIcons
                     name='cart-remove'
-                    size={16}
+                    size={20}
                     onPress={() => {
                       handleRemoveItem(item.cart_line_id);
                     }}
+                    style={styles.cartButton}
                   />
+                  </View>
+                  <View style={styles.priceView}>
                   <Text style={styles.price}>
                     Total: £{((item.price * item.quantity) / 100).toFixed(2)}
                   </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -240,10 +245,10 @@ export function Cart() {
       />
       <View style={styles.buttonView}>
         <Pressable style={styles.button} onPress={handleDeleteBasket}>
-          <Text>Discard Basket</Text>
+          <Text style={styles.buttonText}>Discard Basket</Text>
         </Pressable>
         <Pressable onPress={() => setVisible(true)} style={styles.button}>
-          <Text>Checkout</Text>
+          <Text style={styles.buttonText}>Checkout</Text>
         </Pressable>
       </View>
       <CheckoutModal
@@ -262,13 +267,15 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: Colors.primary,
-    padding: 12,
-    margin: 12,
+    margin: 8,
     borderRadius: 8,
+    borderColor: "#36454F",
+    borderWidth: 1,
     flexDirection: "row",
+    shadowColor: "black",
   },
   productTextContainer: {
-    width: "60%",
+    width: "75%",
   },
   productDetails: {
     marginHorizontal: 16,
@@ -281,22 +288,24 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontWeight: "bold",
-    fontSize: 24,
-    textTransform: "capitalize",
-  },
-  description: {
-    marginTop: 16,
-    fontSize: 12,
+    fontSize: 20,
+    fontFamily:"sans-serif",
+    textTransform: "uppercase",
+    color: "#00008b",
   },
   price: {
     padding: 10,
     textAlign: "right",
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#b22222",
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginLeft: 18,
+    marginTop: 10,
   },
   buttonView: {
     flexDirection: "row",
@@ -305,16 +314,26 @@ const styles = StyleSheet.create({
   button: {
     borderColor: "black",
     borderWidth: 2,
-    width: 100,
-    padding: 8,
+    width: 150,
+    padding: 12,
     borderRadius: 10,
     alignSelf: "center",
-    marginTop: 10,
-    marginLeft: 24,
+    margin: 20,
+    backgroundColor: "#1F5673",
   },
   noProducts: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
+  priceView: {
+    marginLeft: 10,
+  },
+  cartButton: {
+    marginLeft: 20,
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+  }
 });

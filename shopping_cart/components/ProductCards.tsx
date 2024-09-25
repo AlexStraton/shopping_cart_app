@@ -103,10 +103,11 @@ export function ProductCards() {
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: Colors.primary,
-    padding: 12,
     margin: 12,
     borderRadius: 8,
     flexDirection: "row",
+    borderColor: "#36454F",
+    borderWidth: 1,
   },
   productTextContainer: {
     width: "60%",
@@ -117,11 +118,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 150,
-    height: 150,
-    borderRadius: 8,
+    height: "100%",
+    borderRadius: 8, 
   },
   productName: {
     fontWeight: "bold",
+    fontFamily: "sans-serif",
     fontSize: 24,
     textTransform: "uppercase",
     color: "#00008b",
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
   description: {
     marginTop: 16,
     fontSize: 16,
-    fontFamily: "Cochin",
+    fontFamily: "sans-serif",
   },
   price: {
     padding: 10,
