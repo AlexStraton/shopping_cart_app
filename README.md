@@ -6,6 +6,7 @@
 
 [Mike Williams](https://github.com/ValkarVarg)
 
+##[App video demo] (https://youtu.be/f2mnA_EE71k)
 
 This is a mobile app replicating the functionality of a shopping website, which allows users to add products to a cart, view the cart and update the quantity of contents, as well as the ability to add new products to the site. You can also checkout as if you were purchasing the contents of the cart and confirm the total of the products in the cart for purchase.
 
